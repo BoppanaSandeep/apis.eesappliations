@@ -10,6 +10,7 @@ class Welcome extends CI_Controller
         $this->load->helper('url');
         $this->load->library('rest');
         $this->load->library('session');
+        $this->load->library('email');
     }
 
     public function index()
@@ -38,5 +39,33 @@ class Welcome extends CI_Controller
         }
 
         echo $ipaddress;
+    }
+
+    public function eesAppSendMail($to, $subject, $message, $cc, $bcc)
+    {
+
+        try {
+            $config['mailtype'] = 'html';
+            $config['protocol'] = 'sendmail';
+            $config['mailpath'] = '/usr/sbin/sendmail';
+            $config['charset'] = 'iso-8859-1';
+            $config['wordwrap'] = true;
+
+            $this->email->initialize($config);
+            $this->email->from('support@eesapplications.website', 'ees');
+            $this->email->to($to);
+            // $this->email->cc($cc);
+            // $this->email->bcc($bcc);
+
+            $this->email->subject($subject);
+            $this->email->message($message);
+            if ($this->email->send()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }
