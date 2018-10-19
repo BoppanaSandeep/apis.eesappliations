@@ -24,7 +24,7 @@ defined('BASEPATH') or exit('No direct script access allowed');
 |
  */
 if ($_SERVER['CI_ENV'] == 'production') {
-    $env = 'https://www.eesaplications.website/apis/';
+    $env = 'https://apis.eesapplications.website/';
 } else {
     $env = 'http://localhost:8081/apis.eesapplications/';
 }

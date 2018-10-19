@@ -18,4 +18,14 @@ class Workwithusmodel extends CI_Model
             return false;
         }
     }
+
+    public function fetchWorkWithUsProposals($filters)
+    {
+        $response = $this->db->get("work_with_us");
+        if (is_array($response->result_array()) && sizeof($response->result_array())) {
+            return $response->result_array();
+        } else {
+            return false;
+        }
+    }
 }

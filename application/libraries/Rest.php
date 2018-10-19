@@ -74,8 +74,7 @@ class REST
             502 => 'Bad Gateway',
             503 => 'Service Unavailable',
             504 => 'Gateway Timeout',
-            505 => 'HTTP Version Not Supported',
-            506 => 'Invalid');
+            505 => 'HTTP Version Not Supported');
         return ($status[$this->_code]) ? $status[$this->_code] : $status[500];
     }
 

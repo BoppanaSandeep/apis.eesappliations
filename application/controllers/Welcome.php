@@ -9,8 +9,11 @@ class Welcome extends CI_Controller
         parent::__construct();
         $this->load->helper('url');
         $this->load->library('rest');
+        $this->load->library('passwordhash');
+        $this->load->library('companymessages');
         $this->load->library('session');
         $this->load->library('email');
+        $this->load->model("welcomemodel");
     }
 
     public function index()
@@ -66,6 +69,47 @@ class Welcome extends CI_Controller
             }
         } catch (Exception $e) {
             return false;
+        }
+    }
+
+    public function login()
+    {
+        if ($this->rest->get_request_method() == $this->rest->post_request_string()) {
+            $loginData = array(
+                "emailId" => $this->input->post('email', true),
+                "status" => 1,
+            );
+            $res = $this->welcomemodel->checkLogin($loginData);
+            if ($res['status'] == 'OK') {
+                if ($this->passwordhash->VerifyPasswordHash($this->input->post('pwd', true), $res['data'][0]['password'])) {
+                    $this->welcomemodel->updateIpaddress($loginData, array("ipaddress" => $this->input->post('ip', true)));
+                    $this->rest->response(json_encode(array("status" => 200, "message" => $this->companymessages->loginSuccess, "loggedin" => $res['data'][0]['password'])), 200);
+                } else {
+                    $this->rest->response(json_encode(array("status" => 200, "message" => $this->companymessages->loginFail)), 200);
+                }
+            } else {
+                $this->rest->response(json_encode(array("status" => 200, "message" => $this->companymessages->loginFail)), 200);
+            }
+        } else {
+            $this->rest->response(json_encode(array("status" => 405, "message" => $this->companymessages->errorMsg)), 405);
+        }
+    }
+
+    public function authorization()
+    {
+        if ($this->rest->get_request_method() == $this->rest->post_request_string()) {
+            $loginData = array(
+                "password" => $this->input->post('token', true),
+                "status" => 1,
+            );
+            $res = $this->welcomemodel->checkLogin($loginData);
+            if ($res['status'] == 'OK') {
+                $this->rest->response(json_encode(array("status" => 200, "message" => $this->companymessages->loginSuccess, "loggedin" => $res['data'][0]['password'])), 200);
+            } else {
+                $this->rest->response(json_encode(array("status" => 200, "message" => $this->companymessages->loginFail)), 200);
+            }
+        } else {
+            $this->rest->response(json_encode(array("status" => 405, "message" => $this->companymessages->errorMsg)), 405);
         }
     }
 }

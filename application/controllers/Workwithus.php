@@ -38,7 +38,30 @@ class Workwithus extends CI_Controller
                 $this->rest->response(json_encode(array("status" => 400, "message" => $this->companymessages->errorMsg)), 400);
             }
         } else {
-            $this->rest->response(json_encode(array("status" => 506, "message" => $this->companymessages->errorMsg)), 506);
+            $this->rest->response(json_encode(array("status" => 405, "message" => $this->companymessages->errorMsg)), 405);
+        }
+    }
+
+    public function fetchWorkWithUsProposal()
+    {
+        if ($this->rest->get_request_method() == $this->rest->post_request_string()) {
+            $requestData = $this->input->post();
+            // print_r($requestData);
+            $filters = array(
+                // 'fullname' => $requestData['name'],
+                // 'emailId' => $requestData['email'],
+                // 'message' => $requestData['message'],
+                // 'addedDate' => date('Y-m-d H:i:s'),
+                // 'ipaddress' => $requestData['ip'],
+            );
+            $response = $this->workwithusmodel->fetchWorkWithUsProposals($filters);
+            if ($response) {
+                $this->rest->response(json_encode(array("status" => 200, "message" => $this->companymessages->dataFound, "info" => $response)), 200);
+            } else {
+                $this->rest->response(json_encode(array("status" => 200, "message" => $this->companymessages->dataNotFound)), 200);
+            }
+        } else {
+            $this->rest->response(json_encode(array("status" => 405, "message" => $this->companymessages->errorMsg)), 405);
         }
     }
 }

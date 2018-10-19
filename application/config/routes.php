@@ -53,6 +53,11 @@ $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = false;
 
+// Authorization
+$route['auth'] = 'welcome/authorization';
+// Login
+$route['login'] = 'welcome/login';
 // get client ip address
 $route['getclientip'] = 'welcome/getclientip';
 $route['workwithus'] = 'workwithus/workwithusproposal';
+$route['fetchProposals'] = 'workwithus/fetchWorkWithUsProposal';
